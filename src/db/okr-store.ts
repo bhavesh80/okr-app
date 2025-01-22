@@ -1,7 +1,11 @@
 import {ObjectiveType} from "../types/okr-types.ts";
 
+let dbIndex = 1;
+const db = new Map<number, ObjectiveType>();
+
 const initialObjectives = [
     {
+        id: dbIndex++,
         title: "Build a software team",
         keyResults: [
             {
@@ -22,13 +26,26 @@ const initialObjectives = [
     },
 ];
 
+initialObjectives.forEach((objective) => db.set(
+    objective.id, objective
+));
+
 
 function getOkrsFromDb(): Promise<ObjectiveType[]> {
     return new Promise((resolve) => {
-        setTimeout(()=> {
-            resolve(initialObjectives);
+        setTimeout(() => {
+            resolve(Array.from(db.values()));
         }, 3000);
     });
 }
 
-export {getOkrsFromDb};
+function insertOkrToDb(newOkr: ObjectiveType): Promise<void> {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            db.set(dbIndex++, newOkr);
+            resolve();
+        }, 3000);
+    })
+}
+
+export {getOkrsFromDb, insertOkrToDb};

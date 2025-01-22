@@ -1,6 +1,7 @@
 import {Plus} from "lucide-react";
 import {KeyResultType, ObjectiveType} from "../types/okr-types.ts";
 import {useState} from "react";
+import {insertOkrToDb} from "../db/okr-store.ts";
 
 type CreateOkrFormProps = {
     setObjectives: (objectives: ObjectiveType[]) => void,
@@ -25,10 +26,13 @@ const CreateOkrForm = ({
 
 
     const addObjective = () => {
-        setObjectives([
-            ...objectives,
-            {title: newObjective, keyResults: keyResults},
-        ]);
+        const newObjectiveToBeAdded = {title: newObjective, keyResults: keyResults};
+        insertOkrToDb(newObjectiveToBeAdded).then(() => {
+            setObjectives([
+                ...objectives,
+                newObjectiveToBeAdded,
+            ]);
+        })
     };
     const addKeyResult = () => {
         setKeyResults([
