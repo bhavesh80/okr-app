@@ -1,44 +1,32 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {ObjectiveType} from "./types/okr-types.ts";
 import CreateOKRForm from "./components/CreateOkrForm.tsx";
 import DisplayOkrs from "./components/DisplayOkrs.tsx";
-
-const initialObjectives = [
-    {
-        title: "Build a software team",
-        keyResults: [
-            {
-                title: "Get 5 Frontend engineers",
-                initialValue: 0,
-                currentValue: 2,
-                targetValue: 5,
-                metrics: "engineers",
-            },
-            {
-                title: "Get 5 Backend engineers",
-                initialValue: 0,
-                currentValue: 1,
-                targetValue: 5,
-                metrics: "engineers",
-            },
-        ],
-    },
-];
+import {getOkrsFromDb} from "./db/okr-store.ts";
 
 function App() {
     const [objectives, setObjectives] =
-        useState<ObjectiveType[]>(initialObjectives);
+        useState<ObjectiveType[] | null>(null);
+    const isLoading = objectives === null;
+
+    useEffect(() => {
+        (async () => {
+            const responseInitialOkrs: ObjectiveType[] = await getOkrsFromDb();
+            setObjectives(responseInitialOkrs);
+        })()
+    }, []);
 
     return (
         <div className="mx-24 mt-8 space-y-8">
             <CreateOKRForm
                 setObjectives={setObjectives}
-                objectives={objectives}
+                objectives={objectives ?? []}
             />
-            <DisplayOkrs
-                objectives={objectives}
-                setObjectives={setObjectives}
-            />
+            {isLoading ? (<p>loading...</p>) :
+                <DisplayOkrs
+                    objectives={objectives}
+                    setObjectives={setObjectives}
+                />}
         </div>
     );
 }
