@@ -1,11 +1,11 @@
 import {ObjectiveType} from "../types/okr-types.ts";
+import {v4 as uuidv4} from 'uuid';
 
-let dbIndex = 1;
-const db = new Map<number, ObjectiveType>();
+const db = new Map<string, ObjectiveType>();
 
 const initialObjectives = [
     {
-        id: dbIndex++,
+        id: uuidv4(),
         title: "Build a software team",
         keyResults: [
             {
@@ -34,18 +34,29 @@ initialObjectives.forEach((objective) => db.set(
 function getOkrsFromDb(): Promise<ObjectiveType[]> {
     return new Promise((resolve) => {
         setTimeout(() => {
+            console.log(Array.from(db.values()));
             resolve(Array.from(db.values()));
         }, 3000);
     });
 }
 
-function insertOkrToDb(newOkr: ObjectiveType): Promise<void> {
+function insertOkrToDb(newOkr: Omit<ObjectiveType, "id">): Promise<void> {
     return new Promise((resolve) => {
         setTimeout(() => {
-            db.set(dbIndex++, newOkr);
+            const id = uuidv4();
+            db.set(id, {
+                id: id,
+                ...newOkr
+            });
             resolve();
         }, 3000);
     })
 }
 
+// function updateOkrToDB() {
+// TODO: get the id of objective we want to update for
+// fetch objective with selected id
+// replace the old okr with new okr
+// update the map
+// }
 export {getOkrsFromDb, insertOkrToDb};

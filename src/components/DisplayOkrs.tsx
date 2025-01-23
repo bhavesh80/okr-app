@@ -4,8 +4,8 @@ import { KeyResultType, ObjectiveType } from "../types/okr-types.ts";
 import AddKeyResultModal from "./AddKeyResultModal.tsx";
 
 type DisplayOkrsProps = {
-  objectives: ObjectiveType[];
-  setObjectives: (objectives: ObjectiveType[]) => void;
+  objectives: Omit<ObjectiveType, "id">[];
+  setObjectives: (objectives: Omit<ObjectiveType, "id">[]) => void;
 };
 
 const DisplayOkrs = ({ objectives, setObjectives }: DisplayOkrsProps) => {

@@ -6,7 +6,7 @@ import {getOkrsFromDb} from "./db/okr-store.ts";
 
 function App() {
     const [objectives, setObjectives] =
-        useState<ObjectiveType[] | null>(null);
+        useState<Omit<ObjectiveType, "id">[] | null>(null);
     const isLoading = objectives === null;
 
     useEffect(() => {

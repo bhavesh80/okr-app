@@ -1,4 +1,5 @@
 type ObjectiveType = {
+    id: string;
     title: string;
     keyResults: KeyResultType[];
 };

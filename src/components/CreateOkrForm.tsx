@@ -4,8 +4,8 @@ import {useState} from "react";
 import {insertOkrToDb} from "../db/okr-store.ts";
 
 type CreateOkrFormProps = {
-    setObjectives: (objectives: ObjectiveType[]) => void,
-    objectives: ObjectiveType[]
+    setObjectives: (objectives: Omit<ObjectiveType, "id">[]) => void,
+    objectives: Omit<ObjectiveType, "id">[]
 }
 
 const CreateOkrForm = ({
@@ -26,7 +26,7 @@ const CreateOkrForm = ({
 
 
     const addObjective = () => {
-        const newObjectiveToBeAdded = {title: newObjective, keyResults: keyResults};
+        const newObjectiveToBeAdded: Omit<ObjectiveType, "id"> = {title: newObjective, keyResults: keyResults};
         insertOkrToDb(newObjectiveToBeAdded).then(() => {
             setObjectives([
                 ...objectives,
