@@ -40,7 +40,6 @@ const CreateOkrForm = ({
         ]);
     };
 
-
     return (
         <div className="border-2 border-gray-300 rounded-md py-4 px-8 max-w-2xl">
         <span className="block mb-8 font-semibold text-2xl">
