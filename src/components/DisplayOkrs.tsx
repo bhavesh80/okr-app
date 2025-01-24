@@ -1,12 +1,15 @@
 import {PackageOpen, Trash2, Plus} from "lucide-react";
-import {useContext,useState} from "react";
+import {useContext, useState} from "react";
 import {KeyResultType} from "../types/okr-types.ts";
 import AddKeyResultModal from "./AddKeyResultModal.tsx";
 import {useDeleteObjective} from "../hooks/useDeleteObjective.tsx";
+import {OkrContext} from "../providers/OkrProvider.tsx";
 
-const DisplayOkrs = () =>{
-    const { objectives,
-    setObjectives} = useContext(OkrContext);
+const DisplayOkrs = () => {
+    const {
+        objectives,
+        setObjectives
+    } = useContext(OkrContext);
 
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -51,7 +54,7 @@ const DisplayOkrs = () =>{
                                 </button>
                                 <button
                                     className="flex items-center mt-2 px-4 py-2 bg-red-400 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
-                                    onClick={() => deleteObjective(objective.id)}
+                                    onClick={() => deleteObjective(objective!.id)}
                                 >
                                     <Trash2 className="mr-2"/>
                                     <span>Delete Objective</span>

@@ -5,11 +5,11 @@ const useDeleteObjective = () => {
     const {objectives, setObjectives} = useContext(OkrContext);
 
     const deleteObjectivesKeyResult = (
-        objectiveIndex: number,
+        objectiveIndex: string,
         keyResultIndex: number
     ) => {
-        const updatedObjectives = objectives!.map((objective, index) => {
-            if (index === objectiveIndex) {
+        const updatedObjectives = objectives!.map((objective) => {
+            if (objective.id === objectiveIndex) {
                 const updatedKeyResults = objective.keyResults.filter(
                     (_, krIndex) => krIndex !== keyResultIndex
                 );
@@ -21,9 +21,9 @@ const useDeleteObjective = () => {
         setObjectives(updatedObjectives);
     };
 
-    const deleteObjective = (objectiveIndex: number) => {
+    const deleteObjective = (objectiveIndex: string) => {
         const updatedObjectives = objectives!.filter(
-            (_, index) => index !== objectiveIndex
+            (objective) => objective.id !== objectiveIndex
         );
         setObjectives(updatedObjectives);
     };
