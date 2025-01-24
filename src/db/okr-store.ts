@@ -1,5 +1,9 @@
 import { InsertObjectiveType, ObjectiveType } from "../types/okr-types.ts";
 
+const HTTP_STATUS = {
+  not_found: 404
+}
+
 async function getOKRs(): Promise<ObjectiveType[]> {
   const responseDefaultOkrs = await fetch("http://localhost:3000/objectives");
   console.log({ responseDefaultOkrs });
@@ -17,9 +21,15 @@ async function insertOKR(newOkr: InsertObjectiveType): Promise<void> {
 }
 
 async function deleteOKR(objectiveId: string): Promise<void> {
-  await fetch(`http://localhost:3000/objectives/${objectiveId}`, {
-    method: "DELETE",
-  });
+  const response = await fetch(
+    `http://localhost:3000/objectives/${objectiveId}`,
+    {
+      method: "DELETE",
+    }
+  );
+  if (response.status === HTTP_STATUS.not_found) {
+    throw new Error("Objective not found");
+  }
 }
 
 export { getOKRs, insertOKR, deleteOKR };

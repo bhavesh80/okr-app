@@ -31,9 +31,13 @@ const DisplayOkrs = () => {
   };
 
   const deleteObjective = async (objectiveId: string) => {
-    await deleteOKR("1231");
-    const updatedOKRs = await getOKRs();
-    setObjectives(updatedOKRs);
+    try {
+      await deleteOKR(objectiveId);
+      const updatedOKRs = await getOKRs();
+      setObjectives(updatedOKRs);
+    } catch (error) {
+      alert(error);
+    }
   };
 
   const addKeyResultToObjective = (keyResult: KeyResultType) => {
