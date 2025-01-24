@@ -1,17 +1,25 @@
-import {ObjectiveType} from "../types/okr-types.ts";
+import { InsertObjectiveType, ObjectiveType } from "../types/okr-types.ts";
 
-async function getOkrsFromDb(): Promise<ObjectiveType[]> {
-    const responseDefaultOkrs = await fetch("http://localhost:3000/objectives");
-    return await responseDefaultOkrs.json();
+async function getOKRs(): Promise<ObjectiveType[]> {
+  const responseDefaultOkrs = await fetch("http://localhost:3000/objectives");
+  console.log({ responseDefaultOkrs });
+
+  return await responseDefaultOkrs.json();
 }
 
-async function insertOkrToDb(newOkr: Omit<ObjectiveType, "id">): Promise<void> {
-    const response = await fetch("http://localhost:3000/objectives", {
-        method: 'POST',
-        body: JSON.stringify(newOkr),
-    });
-    const responseData = await response.json();
-    console.log(responseData);
+async function insertOKR(newOkr: InsertObjectiveType): Promise<void> {
+  const response = await fetch("http://localhost:3000/objectives", {
+    method: "POST",
+    body: JSON.stringify(newOkr),
+  });
+  const responseData = await response.json();
+  console.log(responseData);
 }
 
-export {getOkrsFromDb, insertOkrToDb};
+async function deleteOKR(objectiveId: string): Promise<void> {
+  await fetch(`http://localhost:3000/objectives/${objectiveId}`, {
+    method: "DELETE",
+  });
+}
+
+export { getOKRs, insertOKR, deleteOKR };

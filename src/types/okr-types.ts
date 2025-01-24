@@ -12,4 +12,6 @@ type KeyResultType = {
     metrics: string;
 };
 
-export type {ObjectiveType, KeyResultType};
+type InsertObjectiveType = Omit<ObjectiveType, "id">
+
+export type {ObjectiveType, KeyResultType, InsertObjectiveType};

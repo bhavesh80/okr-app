@@ -1,25 +1,24 @@
 import { PackageOpen, Trash2, Plus } from "lucide-react";
-import { useState } from "react";
-import { KeyResultType, ObjectiveType } from "../types/okr-types.ts";
+import { useContext, useState } from "react";
+import { KeyResultType } from "../types/okr-types.ts";
 import AddKeyResultModal from "./AddKeyResultModal.tsx";
+import { deleteOKR, getOKRs } from "../db/okr-store.ts";
+import { OkrContext } from "../providers/OkrProvider.tsx";
 
-type DisplayOkrsProps = {
-  objectives: Omit<ObjectiveType, "id">[];
-  setObjectives: (objectives: Omit<ObjectiveType, "id">[]) => void;
-};
+const DisplayOkrs = () => {
+  const { objectives, setObjectives } = useContext(OkrContext);
 
-const DisplayOkrs = ({ objectives, setObjectives }: DisplayOkrsProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedObjectiveIndex, setSelectedObjectiveIndex] = useState<
-    number | null
+    string | null
   >(null);
 
   const deleteObjectivesKeyResult = (
-    objectiveIndex: number,
+    objectiveIndex: string,
     keyResultIndex: number
   ) => {
-    const updatedObjectives = objectives.map((objective, index) => {
-      if (index === objectiveIndex) {
+    const updatedObjectives = objectives!.map((objective) => {
+      if (objective.id === objectiveIndex) {
         const updatedKeyResults = objective.keyResults.filter(
           (_, krIndex) => krIndex !== keyResultIndex
         );
@@ -31,17 +30,16 @@ const DisplayOkrs = ({ objectives, setObjectives }: DisplayOkrsProps) => {
     setObjectives(updatedObjectives);
   };
 
-  const deleteObjective = (objectiveIndex: number) => {
-    const updatedObjectives = objectives.filter(
-      (_, index) => index !== objectiveIndex
-    );
-    setObjectives(updatedObjectives);
+  const deleteObjective = async (objectiveId: string) => {
+    await deleteOKR("1231");
+    const updatedOKRs = await getOKRs();
+    setObjectives(updatedOKRs);
   };
 
   const addKeyResultToObjective = (keyResult: KeyResultType) => {
     if (selectedObjectiveIndex !== null) {
-      const updatedObjectives = objectives.map((objective, index) => {
-        if (index === selectedObjectiveIndex) {
+      const updatedObjectives = objectives!.map((objective) => {
+        if (objective.id === selectedObjectiveIndex) {
           return {
             ...objective,
             keyResults: [...objective.keyResults, keyResult],
@@ -55,16 +53,16 @@ const DisplayOkrs = ({ objectives, setObjectives }: DisplayOkrsProps) => {
 
   return (
     <div id="show-okr" className="border-2 border-gray-300 rounded-md p-4">
-      {objectives.length > 0 ? (
-        objectives.map((objective, objectiveIndex) => (
-          <div key={objectiveIndex} className="p-4 space-y-4">
+      {objectives!.length > 0 ? (
+        objectives!.map((objective) => (
+          <div key={objective.id} className="p-4 space-y-4">
             <div className="flex justify-between items-center">
               <span className="font-semibold text-2xl">{objective.title}</span>
               <div className="flex space-x-2">
                 <button
                   className="flex items-center mt-2 px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   onClick={() => {
-                    setSelectedObjectiveIndex(objectiveIndex);
+                    setSelectedObjectiveIndex(objective.id);
                     setIsModalOpen(true);
                   }}
                 >
@@ -73,7 +71,7 @@ const DisplayOkrs = ({ objectives, setObjectives }: DisplayOkrsProps) => {
                 </button>
                 <button
                   className="flex items-center mt-2 px-4 py-2 bg-red-400 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
-                  onClick={() => deleteObjective(objectiveIndex)}
+                  onClick={() => deleteObjective(objective.id)}
                 >
                   <Trash2 className="mr-2" />
                   <span>Delete Objective</span>
@@ -106,7 +104,7 @@ const DisplayOkrs = ({ objectives, setObjectives }: DisplayOkrsProps) => {
                     <button
                       className="mt-2 px-4 py-2 bg-red-400 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                       onClick={() =>
-                        deleteObjectivesKeyResult(objectiveIndex, krIndex)
+                        deleteObjectivesKeyResult(objective.id, krIndex)
                       }
                     >
                       <Trash2 className="h-4 w-4" />

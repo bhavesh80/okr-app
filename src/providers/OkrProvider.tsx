@@ -1,28 +1,23 @@
-import {createContext, ReactElement, useState} from "react";
-import {ObjectiveType} from "../types/okr-types.ts";
+import { createContext, ReactElement, useState } from "react";
+import { ObjectiveType } from "../types/okr-types.ts";
 
 type OkrContextType = {
-    objectives: Omit<ObjectiveType, "id">[] | null;
-    setObjectives: React.Dispatch<React.SetStateAction<Omit<ObjectiveType, "id">[] | null>>;
-}
+  objectives: ObjectiveType[] | null;
+  setObjectives: React.Dispatch<React.SetStateAction<ObjectiveType[] | null>>;
+};
 
 export const OkrContext = createContext<OkrContextType>({
-    objectives: null,
-    setObjectives: () => {}
+  objectives: null,
+  setObjectives: () => {},
 });
 
-const OkrProvider = ({children}: {
-    children: ReactElement
-}) => {
-    const [objectives, setObjectives] =
-        useState<Omit<ObjectiveType, "id">[] | null>(null);
+const OkrProvider = ({ children }: { children: ReactElement }) => {
+  const [objectives, setObjectives] = useState<ObjectiveType[] | null>(null);
 
-    const stateToExpose = {objectives, setObjectives};
+  const stateToExpose = { objectives, setObjectives };
 
-    return (
-        <OkrContext.Provider value={stateToExpose}>
-            {children}
-        </OkrContext.Provider>
-    )
+  return (
+    <OkrContext.Provider value={stateToExpose}>{children}</OkrContext.Provider>
+  );
 };
 export default OkrProvider;
